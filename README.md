@@ -65,9 +65,11 @@ LC_ALL=C tr -dc '[:upper:]' < /dev/urandom | fold -w 20 | head -n1
 BSSYMUGGTJQVWZZWOPJG
 ```
 
-**Important** Save this credential in a permanent, secure place as it will be needed to issue new sub-keys after expiration, and to provision additional YubiKeys, as well as to your Debian Live environment clipboard, as you'll need it several times throughout to generate keys.
+> **⚠Important** Save this credential in a permanent, secure place as it will be needed to:
+> - issue new sub-keys after expiration, 
+> - provision additional YubiKeys
 
-### Generate RSA with custom capabilities
+### Master with custom capabilities
 
 ```console 
 gpg --expert --full-generate-key
@@ -80,7 +82,7 @@ gpg --expert --full-generate-key
 - Keysize: **4096**
 - Expires: **0**
 
-Input any name and email address (it doesn't have to be valid):
+Credentials(it doesn't have to be valid):
 
 ```console
 GnuPG needs to construct a user ID to identify your key.
@@ -94,29 +96,13 @@ You selected this USER-ID:
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
 ```
 
-It will return a key ID:
+Output:
 ```console
 gpg: key 0xFF3E7D88647EBCDB marked as ultimately trusted
 ```
-Store it in your terminal config or export it straight in the terminal
+Store it:
 ```console
 export KEYID=0xFF3E7D88647EBCDB
-```
-
-# Sign with existing key
-
-(Optional) If you already have a PGP key, you may want to sign the new key with the old one to prove that the new key is controlled by you.
-
-Export your existing key to move it to the working keyring:
-
-```console
-$ gpg --export-secret-keys --armor --output /tmp/new.sec
-```
-
-Then sign the new key:
-
-```console
-$ gpg  --default-key $OLDKEY --sign-key $KEYID
 ```
 
 # Sub-keys
