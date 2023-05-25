@@ -9,7 +9,7 @@ Prequistities
 Download and install [Homebrew](https://brew.sh/) and the following packages:
 
 ```console
-$ brew install gnupg yubikey-personalization hopenpgp-tools ykman pinentry-mac wget
+brew install gnupg yubikey-personalization hopenpgp-tools ykman pinentry-mac wget
 ```
 
 
@@ -35,11 +35,15 @@ wget -O $GNUPGHOME/gpg.conf https://raw.githubusercontent.com/drduh/config/maste
 grep -ve "^#" $GNUPGHOME/gpg.conf
 ```
 
-## Harden configuration
+## Key generation
 
-Basic key generation
 
-# Master key
+
+You will need the following keys:
+- master key
+- sub keys created from master key
+
+### Master key
 
 The first key to generate is the master key. It will be used for certification only: to issue sub-keys that are used for encryption, signing and authentication.
 
@@ -50,117 +54,53 @@ You'll be prompted to enter and verify a passphrase - keep it handy as you'll ne
 Generate a strong passphrase which could be written down in a secure place or memorized:
 
 ```console
-$ gpg --gen-random --armor 0 24
+gpg --gen-random --armor 0 24
 ydOmByxmDe63u7gqx2XI9eDgpvJwibNH
 ```
 
 Use upper case letters for improved readability if passwords are written down by hand:
 
 ```console
-$ LC_ALL=C tr -dc '[:upper:]' < /dev/urandom | fold -w 20 | head -n1
+LC_ALL=C tr -dc '[:upper:]' < /dev/urandom | fold -w 20 | head -n1
 BSSYMUGGTJQVWZZWOPJG
 ```
 
 **Important** Save this credential in a permanent, secure place as it will be needed to issue new sub-keys after expiration, and to provision additional YubiKeys, as well as to your Debian Live environment clipboard, as you'll need it several times throughout to generate keys.
 
-**Tip** On Linux or OpenBSD, select the password using the mouse or by double-clicking on it to copy to clipboard. Paste using the middle mouse button or `Shift`-`Insert`.
+### Generate RSA with custom capabilities
 
-Generate a new key with GPG, selecting `(8) RSA (set your own capabilities)`, `Certify` capability only and `4096` bit key size.
-
-Do **not** set the master (certify) key to expire - see [Note #3](#notes).
-
-```console
-$ gpg --expert --full-generate-key
-
-Please select what kind of key you want:
-   (1) RSA and RSA (default)
-   (2) DSA and Elgamal
-   (3) DSA (sign only)
-   (4) RSA (sign only)
-   (7) DSA (set your own capabilities)
-   (8) RSA (set your own capabilities)
-   (9) ECC and ECC
-  (10) ECC (sign only)
-  (11) ECC (set your own capabilities)
-  (13) Existing key
-Your selection? 8
-
-Possible actions for a RSA key: Sign Certify Encrypt Authenticate
-Current allowed actions: Sign Certify Encrypt
-
-   (S) Toggle the sign capability
-   (E) Toggle the encrypt capability
-   (A) Toggle the authenticate capability
-   (Q) Finished
-
-Your selection? E
-
-Possible actions for a RSA key: Sign Certify Encrypt Authenticate
-Current allowed actions: Sign Certify
-
-   (S) Toggle the sign capability
-   (E) Toggle the encrypt capability
-   (A) Toggle the authenticate capability
-   (Q) Finished
-
-Your selection? S
-
-Possible actions for a RSA key: Sign Certify Encrypt Authenticate
-Current allowed actions: Certify
-
-   (S) Toggle the sign capability
-   (E) Toggle the encrypt capability
-   (A) Toggle the authenticate capability
-   (Q) Finished
-
-Your selection? Q
-RSA keys may be between 1024 and 4096 bits long.
-What keysize do you want? (2048) 4096
-Requested keysize is 4096 bits
-Please specify how long the key should be valid.
-         0 = key does not expire
-      <n>  = key expires in n days
-      <n>w = key expires in n weeks
-      <n>m = key expires in n months
-      <n>y = key expires in n years
-Key is valid for? (0) 0
-Key does not expire at all
-Is this correct? (y/N) y
+```console 
+gpg --expert --full-generate-key
 ```
+
+- Option **8**: RSA (set your own capabilities)
+- Option **E**: Toggle Encrypt
+- Option **S**: Toggle Sign
+- Option **Q**: Finished
+- Keysize: **4096**
+- Expires: **0**
 
 Input any name and email address (it doesn't have to be valid):
 
 ```console
 GnuPG needs to construct a user ID to identify your key.
 
-Real name: Dr Duh
-Email address: doc@duh.to
+Real name: Dr. Rambo
+Email address: dr@rambo.br
 Comment: [Optional - leave blank]
 You selected this USER-ID:
-    "Dr Duh <doc@duh.to>"
+    "Dr. Rambo <dr@rambo.br>"
 
 Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
-
-We need to generate a lot of random bytes. It is a good idea to perform
-some other action (type on the keyboard, move the mouse, utilize the
-disks) during the prime generation; this gives the random number
-generator a better chance to gain enough entropy.
-
-gpg: /tmp.FLZC0xcM/trustdb.gpg: trustdb created
-gpg: key 0xFF3E7D88647EBCDB marked as ultimately trusted
-gpg: directory '/tmp.FLZC0xcM/openpgp-revocs.d' created
-gpg: revocation certificate stored as '/tmp.FLZC0xcM/openpgp-revocs.d/011CE16BD45B27A55BA8776DFF3E7D88647EBCDB.rev'
-public and secret key created and signed.
-
-pub   rsa4096/0xFF3E7D88647EBCDB 2017-10-09 [C]
-      Key fingerprint = 011C E16B D45B 27A5 5BA8  776D FF3E 7D88 647E BCDB
-uid                              Dr Duh <doc@duh.to>
 ```
 
-Export the key ID as a [variable](https://stackoverflow.com/questions/1158091/defining-a-variable-with-or-without-export/1158231#1158231) (`KEYID`) for use later:
-
+It will return a key ID:
 ```console
-$ export KEYID=0xFF3E7D88647EBCDB
+gpg: key 0xFF3E7D88647EBCDB marked as ultimately trusted
+```
+Store it in your terminal config or export it straight in the terminal
+```console
+export KEYID=0xFF3E7D88647EBCDB
 ```
 
 # Sign with existing key
