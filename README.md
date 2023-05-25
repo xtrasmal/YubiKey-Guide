@@ -1,4 +1,10 @@
-## macOS
+# TLDR guide
+
+Prequistities
+- Mac OS
+
+
+## Installation
 
 Download and install [Homebrew](https://brew.sh/) and the following packages:
 
@@ -6,11 +12,10 @@ Download and install [Homebrew](https://brew.sh/) and the following packages:
 $ brew install gnupg yubikey-personalization hopenpgp-tools ykman pinentry-mac wget
 ```
 
-**Note** An additional Python package dependency may need to be installed to use [`ykman`](https://support.yubico.com/support/solutions/articles/15000012643-yubikey-manager-cli-ykman-user-guide) - `pip install yubikey-manager`
 
-# Creating keys
+## Getting ready
 
-## Temporary working directory
+A few steps are needed to get ready
 
 Add two environment keys to your `.bash_profile`, `.bashrc` or `.zshrc`.
 
@@ -29,8 +34,6 @@ cd ~/gnupg-workspace
 wget -O $GNUPGHOME/gpg.conf https://raw.githubusercontent.com/drduh/config/master/gpg.conf
 grep -ve "^#" $GNUPGHOME/gpg.conf
 ```
-
-**Important** Disable networking for the remainder of the setup.
 
 ## Harden configuration
 
