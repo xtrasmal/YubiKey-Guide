@@ -70,13 +70,11 @@ LC_ALL=C tr -dc '[:upper:]' < /dev/urandom | fold -w 20 | head -n1
 BSSYMUGGTJQVWZZWOPJG
 ```
 
-
-### Master key
+### 🔑 Master key
 
 > **⚠ Important** The master key should be kept offline at all times and only accessed to revoke or issue new sub-keys. Keys can also be generated on the YubiKey itself to ensure no other copies exist.
 
 The first key to generate is the master key. It will be used for certification only: to issue sub-keys that are used for encryption, signing and authentication.
-
 
 
 ```console 
@@ -113,9 +111,9 @@ Store it:
 export KEYID=0xFF3E7D88647EBCDB
 ```
 
-### Encryption key
+### Subkeys key
 
-Edit the master key to add sub-keys:
+Edit the master key to allow adding of sub-keys:
 
 ```console
 $ gpg --expert --edit-key $KEYID
@@ -125,14 +123,14 @@ Secret key is available.
 sec  rsa4096/0xEA5DE91459B80592
     created: 2017-10-09  expires: never       usage: C
     trust: ultimate      validity: ultimate
-[ultimate] (1). Dr Duh <doc@duh.to>
+[ultimate] (1). Dr Rambo <dr@rambo.br>
 ```
 
-Use 4096-bit RSA keys.
+- Use 4096-bit RSA keys.
+- Use a 1 year expiration for sub-keys 
+  - they can be renewed using the offline master key. See [rotating keys](#rotating-keys).
 
-Use a 1 year expiration for sub-keys - they can be renewed using the offline master key. See [rotating keys](#rotating-keys).
-
-## Signing key
+#### 🔑 Signing key
 
 Create a [signing key](https://stackoverflow.com/questions/5421107/can-rsa-be-both-used-as-encryption-and-signature/5432623#5432623) by selecting `addkey` then `(4) RSA (sign only)`:
 
@@ -178,7 +176,7 @@ ssb  rsa4096/0xBECFA3C1AE191D15
 [ultimate] (1). Dr Duh <doc@duh.to>
 ```
 
-## Encryption
+#### 🔑 Encryption key
 
 Next, create an [encryption key](https://www.cs.cornell.edu/courses/cs5430/2015sp/notes/rsa_sign_vs_dec.php) by selecting `(6) RSA (encrypt only)`:
 
@@ -224,7 +222,7 @@ ssb  rsa4096/0x5912A795E90DD2CF
 [ultimate] (1). Dr Duh <doc@duh.to>
 ```
 
-## Authentication
+#### 🔑 Authentication
 
 Finally, create an [authentication key](https://superuser.com/questions/390265/what-is-a-gpg-with-authenticate-capability-used-for).
 
