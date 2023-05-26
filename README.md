@@ -37,19 +37,24 @@ grep -ve "^#" $GNUPGHOME/gpg.conf
 
 ## Key generation
 
+You will need to generate the following:
+| Type                 | Used for                                       |
+| -------------------- | ---------------------------------------------- |
+| Passphrase           | Generation of fresh sub-keys after expiration  |
+| Master key           | Certification of subkeys                       |
+| Encryption key       | Key for encryption.                            |
+| Signing key          | Key for signing.                               |
+| Authenetication key  | Key for authentication.                        |
 
-
-You will need the following keys:
+- passphrase
 - master key
 - sub keys created from master key
 
-### Master key
+### Passphrase
 
-The first key to generate is the master key. It will be used for certification only: to issue sub-keys that are used for encryption, signing and authentication.
-
-**Important** The master key should be kept offline at all times and only accessed to revoke or issue new sub-keys. Keys can also be generated on the YubiKey itself to ensure no other copies exist.
-
-You'll be prompted to enter and verify a passphrase - keep it handy as you'll need it multiple times later.
+> **⚠ Important** Save the output in a permanent, secure place as it will be needed to:
+> - issue new sub-keys after expiration, 
+> - provision additional YubiKeys
 
 Generate a strong passphrase which could be written down in a secure place or memorized:
 
@@ -65,11 +70,14 @@ LC_ALL=C tr -dc '[:upper:]' < /dev/urandom | fold -w 20 | head -n1
 BSSYMUGGTJQVWZZWOPJG
 ```
 
-> **⚠Important** Save this credential in a permanent, secure place as it will be needed to:
-> - issue new sub-keys after expiration, 
-> - provision additional YubiKeys
 
-### Master with custom capabilities
+### Master key
+
+> **⚠ Important** The master key should be kept offline at all times and only accessed to revoke or issue new sub-keys. Keys can also be generated on the YubiKey itself to ensure no other copies exist.
+
+The first key to generate is the master key. It will be used for certification only: to issue sub-keys that are used for encryption, signing and authentication.
+
+
 
 ```console 
 gpg --expert --full-generate-key
@@ -105,7 +113,7 @@ Store it:
 export KEYID=0xFF3E7D88647EBCDB
 ```
 
-# Sub-keys
+### Encryption key
 
 Edit the master key to add sub-keys:
 
@@ -124,7 +132,7 @@ Use 4096-bit RSA keys.
 
 Use a 1 year expiration for sub-keys - they can be renewed using the offline master key. See [rotating keys](#rotating-keys).
 
-## Signing
+## Signing key
 
 Create a [signing key](https://stackoverflow.com/questions/5421107/can-rsa-be-both-used-as-encryption-and-signature/5432623#5432623) by selecting `addkey` then `(4) RSA (sign only)`:
 
