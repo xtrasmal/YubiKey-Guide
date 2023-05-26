@@ -111,8 +111,6 @@ Store it:
 export KEYID=0xFF3E7D88647EBCDB
 ```
 
-### Subkeys key
-
 Edit the master key to allow adding of sub-keys:
 
 ```console
@@ -130,7 +128,7 @@ sec  rsa4096/0xEA5DE91459B80592
 - Use a 1 year expiration for sub-keys 
   - they can be renewed using the offline master key. See [rotating keys](#rotating-keys).
 
-#### 🔑 Signing key
+### 🔑 Signing key
 
 Create a [signing key](https://stackoverflow.com/questions/5421107/can-rsa-be-both-used-as-encryption-and-signature/5432623#5432623) by selecting `addkey` then `(4) RSA (sign only)`:
 
@@ -176,7 +174,7 @@ ssb  rsa4096/0xBECFA3C1AE191D15
 [ultimate] (1). Dr Duh <doc@duh.to>
 ```
 
-#### 🔑 Encryption key
+### 🔑 Encryption key
 
 Next, create an [encryption key](https://www.cs.cornell.edu/courses/cs5430/2015sp/notes/rsa_sign_vs_dec.php) by selecting `(6) RSA (encrypt only)`:
 
@@ -222,7 +220,7 @@ ssb  rsa4096/0x5912A795E90DD2CF
 [ultimate] (1). Dr Duh <doc@duh.to>
 ```
 
-#### 🔑 Authentication
+### 🔑 Authentication key
 
 Finally, create an [authentication key](https://superuser.com/questions/390265/what-is-a-gpg-with-authenticate-capability-used-for).
 
